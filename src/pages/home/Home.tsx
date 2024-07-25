@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux";
+import { getRecipesByCategory } from "../../api/recipes/recipeApi.ts";
 import RecipeList from "../../components/recipe/RecipeList.tsx"
 
 import "./home.scss"
@@ -17,22 +18,21 @@ export default function Home()
     const [lunchFocus, setLunchFocus] = useState(false)
     const [dinnerFocus, setDinnerFocus] = useState(false)
 
-    // const getCategoryData = async (categoryType) => {
-    //     const token = localStorage.getItem("token")
-    //     try {
-    //         const response = await getCategory(token, categoryType, page);
-    //         console.log(response.data);
-    //         setCategoryList(response.data)
-    //         // navigate('/home')
-    //     } catch (err) {
-    //         if (!err?.response) {
-    //         console.log(err);
-    //         }
-    //     }
-    // }
+    const getCategoryData = async () => {
+        try {
+            const response = await getRecipesByCategory({category: "Lunch", page: 1, limit: 10});
+            console.log(response.data);
+            setCategoryList(response.data)
+            // navigate('/home')
+        } catch (err) {
+            if (!err?.response) {
+            console.log(err);
+            }
+        }
+    }
 
     useEffect(()=>{
-        // getCategoryData()
+        getCategoryData()
     },[])
 
     function handleBreakfastFocus()
@@ -41,21 +41,23 @@ export default function Home()
         setLunchFocus(false)
         setDinnerFocus(false)
         setCategory("Breakfast")
-        // getCategoryData("Breakfast")
+        getCategoryData()
     }
     function handleLunchFocus()
     {
         setBreakfastFocus(false)
         setLunchFocus(true)
         setDinnerFocus(false)
-        // getCategoryData("Lunch")
+        setCategory("Lunch")
+        getCategoryData()
     }
     function handleDinnerFocus()
     {
         setBreakfastFocus(false)
         setLunchFocus(false)
         setDinnerFocus(true)
-        // getCategoryData("Dinner")
+        setCategory("Dinner")
+        getCategoryData()
     }
 
 

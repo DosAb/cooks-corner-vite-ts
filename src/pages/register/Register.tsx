@@ -11,6 +11,20 @@ export default function Register()
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
+    const handleRegister = async (data) => {
+        try {
+            const response = await register(data);
+            localStorage.setItem("accessToken", response.data.access)
+            localStorage.setItem("refreshToken", response.data.refresh)
+            console.log('Registration successful:', response);
+            navigate("/")
+        } catch (err) {
+            if (!err?.response) {
+                console.log(err);
+            }
+        }
+      };
+
     const { values, errors, touched, handleBlur, handleChange, handleSubmit, isSubmitting,
     } = useFormik({
       initialValues: {
@@ -28,7 +42,7 @@ export default function Register()
             password_confirm: values.confirmPassword,
         }
         dispatch(setLogin(values.login))
-        register(registerData)
+        handleRegister(registerData)
         console.log("submit");
       },
     });

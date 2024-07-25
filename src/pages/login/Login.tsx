@@ -1,25 +1,26 @@
 import { useFormik } from "formik";
 import { NavLink, useNavigate } from 'react-router-dom'
 import { loginSchema } from "../../schemas";
+import { login } from "../../api/auth/authApi";
 import './login.scss'
 
 export default function Login()
 {
     const navigate = useNavigate()
 
-    // const handleLogin = async (data) =>{
-    //     try {
-    //         const response = await postLogin(data);
-    //         console.log(response.data);
-    //         localStorage.setItem("token", response.data.access)
-    //         localStorage.setItem("refreshToken", response.data.refresh)
-    //         navigate('/home')
-    //     } catch (err) {
-    //         if (!err?.response) {
-    //         console.log(err);
-    //         }
-    //     }
-    // }
+    const handleLogin = async (data) =>{
+        try {
+            const response = await login(data);
+            console.log(response.data);
+            localStorage.setItem("accessToken", response.data.access)
+            localStorage.setItem("refreshToken", response.data.refresh)
+            navigate('/home')
+        } catch (err) {
+            if (!err?.response) {
+            console.log(err);
+            }
+        }
+    }
 
     const { values, errors, touched, handleBlur, handleChange, handleSubmit, isSubmitting,
     } = useFormik({
@@ -34,7 +35,7 @@ export default function Login()
             email: values.email,
             password: values.password
         }
-        // handleLogin(loginData)
+        handleLogin(loginData)
       },
     });
 

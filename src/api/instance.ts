@@ -1,4 +1,5 @@
 import axios from "axios";
+import Endpoints from "./endpoints";
 
 const axiosInstance = axios.create({
   baseURL: "https://marina-backender.org.kg/cookscorner/",
@@ -7,34 +8,59 @@ const axiosInstance = axios.create({
   },
 });
 
-// axiosInstance.interceptors.request.use((config) => {
-//     console.log(config)
-//     const token = localStorage.getItem('accessToken'); // Retrieve the token from storage
-//     if (token) {
-//       config.headers.Authorization = `Bearer ${token}`;
-//     }
-//     return config;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
-// axiosInstance.interceptors.response.use((config) => {
-//     return config;
-//   },
-//   (error) => {
-//     const originalRequest = error.config
-//     if(error.response.status == 401 && error.config && !error.config._isRetry){
-//       originalRequest._isRetry = true
-//       //Refresh function
-//     }
-//     throw error
-//   });
+const refreshAccessToken = async () => {
+  const refreshToken = localStorage.getItem('refreshToken');
+  console.log(refreshToken)
 
-// export const getCategory = (token, category, page) => axiosInstance.get(`recipes/by-category/?category=${category}&page=${page}&limit=10`,{
-//   headers: {
-//     Authorization: `Bearer ${token}`
-//   }
-// });
+  const {data} = await axiosInstance.post('/users/login/refresh/', {refresh: refreshToken});
+  console.log(data);
+  localStorage.setItem('refreshToken', data.refresh)
+  localStorage.setItem('accessToken', data.access)
+  return data;
+};
+
+const handleRefresh = async () => {
+  try {
+      const response = await refreshAccessToken();
+  } catch (err) {
+      if (!err?.response) {
+          console.log(err);
+      }
+  }
+};
+
+
+
+axiosInstance.interceptors.request.use((config) => {
+    const token = localStorage.getItem('accessToken'); // Retrieve the token from storage
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+axiosInstance.interceptors.response.use((config) => {
+    return config;
+  },
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        try {
+          console.log('refresh')
+          handleRefresh()
+          return axiosInstance(originalRequest);
+        } catch (refreshError: any) {
+          // localStorage.removeItem('accessToken');
+          // localStorage.removeItem('refreshToken');
+          throw refreshError;
+        }
+    }
+    throw error
+});
 
 export default axiosInstance

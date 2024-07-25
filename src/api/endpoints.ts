@@ -3,7 +3,7 @@ const Endpoints = {
         LOGIN: "users/login/",
         REGISTER: "users/signup/",
         RESEND: "users/resend-email/",
-        REFRESH: "users/refresh/",
+        REFRESH: "users/login/refresh/",
         LOGOUT: "users/logout/",
     },
     RECIPES: {
