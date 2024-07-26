@@ -10,26 +10,15 @@ const axiosInstance = axios.create({
 
 const refreshAccessToken = async () => {
   const refreshToken = localStorage.getItem('refreshToken');
-  console.log(refreshToken)
 
   const {data} = await axiosInstance.post('/users/login/refresh/', {refresh: refreshToken});
-  console.log(data);
-  localStorage.setItem('refreshToken', data.refresh)
-  localStorage.setItem('accessToken', data.access)
+  console.log(data)
+  localStorage.setItem("accessToken", data.access)
+  localStorage.setItem("refreshToken", data.refresh)
   return data;
 };
 
-const handleRefresh = async () => {
-  try {
-      const response = await refreshAccessToken();
-  } catch (err) {
-      if (!err?.response) {
-          console.log(err);
-      }
-  }
-};
-
-
+// refreshAccessToken()
 
 axiosInstance.interceptors.request.use((config) => {
     const token = localStorage.getItem('accessToken'); // Retrieve the token from storage
@@ -51,13 +40,16 @@ axiosInstance.interceptors.response.use((config) => {
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
         try {
-          console.log('refresh')
-          handleRefresh()
+          console.log('refresh', error)
+          // const data = await refreshAccessToken()
+          // localStorage.setItem('refreshToken', data.refresh)
+          // localStorage.setItem('accessToken', data.access)
+
           return axiosInstance(originalRequest);
         } catch (refreshError: any) {
           // localStorage.removeItem('accessToken');
           // localStorage.removeItem('refreshToken');
-          throw refreshError;
+          console.log("not authorized")
         }
     }
     throw error

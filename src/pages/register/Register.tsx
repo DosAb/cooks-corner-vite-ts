@@ -23,7 +23,7 @@ export default function Register()
                 console.log(err);
             }
         }
-      };
+    };
 
     const { values, errors, touched, handleBlur, handleChange, handleSubmit, isSubmitting,
     } = useFormik({

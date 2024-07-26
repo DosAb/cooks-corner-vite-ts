@@ -21,8 +21,9 @@ export default function Home()
     const getCategoryData = async () => {
         try {
             const response = await getRecipesByCategory({category: "Lunch", page: 1, limit: 10});
-            console.log(response.data);
-            setCategoryList(response.data)
+            const {data} = response.data
+            console.log(data);
+            setCategoryList(data)
             // navigate('/home')
         } catch (err) {
             if (!err?.response) {
@@ -71,7 +72,11 @@ export default function Home()
                     <button onClick={handleLunchFocus} className={lunchFocus ? "focused" : ""}>Lunch</button>
                     <button onClick={handleDinnerFocus} className={dinnerFocus ? "focused" : ""}>Dinner</button>
                 </div>
-                <RecipeList />
+                <div className="recipes">
+                    {categoryList.map((data)=> (
+                        <RecipeList key={data.name} img={data.meal_picture} title={data.name} author={data.author_name} likes={data.likes} saves={data.saves} />
+                    ))}
+                </div>
             </div>
         </div>
     </>
