@@ -8,3 +8,9 @@ export const getRecipesByCategory = async (data: CategoryRecipesParams)=>{
     );
     return response;
 }
+export const searchRecipe = async (name: string)=>{
+    const response = await axiosInstance.get(
+        Endpoints.RECIPES.GET_RECIPE_SEARCH + `?search=${name}`
+    );
+    return response;
+}
