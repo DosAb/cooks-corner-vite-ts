@@ -14,3 +14,10 @@ export const searchRecipe = async (name: string)=>{
     );
     return response;
 }
+
+export const getRecipeDetail = async (name: string)=>{
+    const response = await axiosInstance.get(
+        Endpoints.RECIPES.GET_RECIPE_DETAIL + name + "/"
+    );
+    return response;
+}

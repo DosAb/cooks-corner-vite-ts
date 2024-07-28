@@ -21,7 +21,7 @@ function App() {
       <Route path="/home" element={<NavLayout />}>
         <Route index element={<Home />} />
         <Route path="author" element={<Author />} />
-        <Route path="detail" element={<Detail />} />
+        <Route path="detail/:id" element={<Detail />} />
         <Route path="profile" element={<Profile />} />
         <Route path="search" element={<Search />} />
       </Route >
