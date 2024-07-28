@@ -41,7 +41,7 @@ axiosInstance.interceptors.response.use((config) => {
         originalRequest._retry = true;
         try {
           console.log('refresh', error)
-          // refreshAccessToken()
+          refreshAccessToken()
           return axiosInstance(originalRequest);
         } catch (refreshError: any) {
           localStorage.removeItem('accessToken');

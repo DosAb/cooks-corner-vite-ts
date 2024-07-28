@@ -8,9 +8,7 @@ import { useEffect, useState } from "react";
 
 export default function Detail() {
   const [recipeData, setRecipeData] = useState();
-
   const { id } = useParams();
-  console.log();
 
   const getRecipeData = async () => {
     try {
