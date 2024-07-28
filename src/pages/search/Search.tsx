@@ -50,7 +50,7 @@ export default function Search() {
         <button className="search__btn-recipe">Add your recipes</button>
         <div className="recipes">
           {recipes.map((data) => (
-            <NavLink to={`/home/detail/${data.slug}`}>
+            <NavLink key={data.name} to={`/home/detail/${data.slug}`}>
                 <RecipeList
                   key={data.name}
                   img={data.meal_picture}

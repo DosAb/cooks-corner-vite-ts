@@ -1,6 +1,7 @@
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { registerSchema } from "../../schemas";
+import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { register } from "../../api/auth/authApi.ts";
 import { setLogin } from "../../redux/slices/loginSlice.ts"
@@ -55,6 +56,9 @@ export default function Register()
             <div className="register__form">
                 <form onSubmit={handleSubmit}>
                     <label htmlFor="login">Name</label>
+                    {errors.username && touched.username && (
+                        <p className="error">{errors.username}</p>
+                    )}
                     <input
                         type="text"
                         id="login"
@@ -96,7 +100,7 @@ export default function Register()
                     />
                     <button type="submit" className="register__btn">Sign In</button>
                 </form>
-                <h4>Already have an account? <span>Sign In Now</span></h4>
+                <h4>Already have an account? <NavLink to="/"><span>Sign In Now</span></NavLink></h4>
             </div>
         </div>
     </>
